@@ -73,3 +73,43 @@ class Universe:
             self.Pmg[:,i] = biased_spec[wave_density::]/self.h**3
             
         return self.z, (self.Pmm, self.Pgg, self.Pmg)
+    
+    def extrapolatePowerSpectrum(self, new_kmax):
+        pixels_to_extrapolate = 5
+        k_end = self.k_range[-pixels_to_extrapolate: -1]
+        new_ks = np.logspace(np.log10(k_end[-1]), np.log10(new_kmax), 100)
+        
+        self.k_range = np.append(self.k_range, new_ks[1::])
+        
+        temp_Pmm = np.zeros(shape=(len(self.k_range), len(self.z)))
+        temp_Pgg = np.zeros(shape=(len(self.k_range), len(self.z)))
+        temp_Pmg = np.zeros(shape=(len(self.k_range), len(self.z)))
+        print('starting loop')
+        for i, z in enumerate(self.z):
+            Pmm_end = self.Pmm[-pixels_to_extrapolate: -1, i]
+            Pgg_end = self.Pgg[-pixels_to_extrapolate: -1, i]
+            Pmg_end = self.Pmg[-pixels_to_extrapolate: -1, i]
+
+            results = stats.linregress(np.log10(k_end), np.log10(Pmm_end))
+            new_logP = np.log10(new_ks)*results.slope + results.intercept
+            new_Pmm = 10**new_logP
+
+            results = stats.linregress(np.log10(k_end), np.log10(Pgg_end))
+            new_logP = np.log10(new_ks)*results.slope + results.intercept
+            new_Pgg = 10**new_logP
+
+            results = stats.linregress(np.log10(k_end), np.log10(Pmg_end))
+            new_logP = np.log10(new_ks)*results.slope + results.intercept
+            new_Pmg = 10**new_logP
+
+            temp_Pmm[:,i] = np.append(self.Pmm[:,i], new_Pmm[1::])
+            temp_Pgg[:,i] = np.append(self.Pgg[:,i], new_Pgg[1::])
+            temp_Pmg[:,i] = np.append(self.Pmg[:,i], new_Pmg[1::])
+            
+        self.Pmm = temp_Pmm
+        self.Pgg = temp_Pgg
+        self.Pmg = temp_Pmg
+        
+
+            
+            

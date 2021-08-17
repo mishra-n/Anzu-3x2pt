@@ -11,6 +11,8 @@ import anzu
 import scipy.integrate as integrate
 import scipy.interpolate as interp
 import scipy.misc as misc
+import scipy.stats as stats
+import scipy.special as special
 
 from anzu.emu_funcs import LPTEmulator
 import twopoint.twopoint as twopoint

@@ -1,7 +1,4 @@
-import headers
 from universe import *
-
-
 
 class Kernels:
     def __init__(self, Universe):

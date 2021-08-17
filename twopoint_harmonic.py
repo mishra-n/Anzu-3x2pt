@@ -1,10 +1,8 @@
-import headers
-from universe import *
 from kernels import *
 
 class TwoPointHarmonic:
-    def __init__(self, Universe, Kernel, lmax):
-        self.Universe = Universe
+    def __init__(self, Kernel, lmax):
+        self.Universe = Kernel.Universe
         self.Kernel = Kernel
         
         self.lmax = lmax
