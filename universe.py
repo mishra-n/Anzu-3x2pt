@@ -45,7 +45,7 @@ class Universe:
         
     def linear_growth(self):
         #default growth rate, we can set our own structure growth using Anzu bias parameters
-        self.D_z = self.a * hyp2f1(1./3,1,11./6,-a**3/self.omega_m*(1-self.omega_m)) / hyp2f1(1./3,1,11./6,-1/self.omega_m*(1-self.omega_m))
+        self.D_z = self.a * special.hyp2f1(1./3,1,11./6,-self.a**3/self.omega_m*(1-self.omega_m)) / special.hyp2f1(1./3,1,11./6,-1/self.omega_m*(1-self.omega_m))
         
     def set_biasParams_Anzu(self, b1, b2, bs2, bnabla2, SN):
         self.bvec = [b1, b2, bs2, bnabla2, SN]
