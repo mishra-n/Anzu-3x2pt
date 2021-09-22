@@ -84,7 +84,6 @@ class Universe:
         temp_Pmm = np.zeros(shape=(len(self.k_range), len(self.z)))
         temp_Pgg = np.zeros(shape=(len(self.k_range), len(self.z)))
         temp_Pmg = np.zeros(shape=(len(self.k_range), len(self.z)))
-        print('starting loop')
         for i, z in enumerate(self.z):
             Pmm_end = self.Pmm[-pixels_to_extrapolate: -1, i]
             Pgg_end = self.Pgg[-pixels_to_extrapolate: -1, i]
@@ -109,7 +108,49 @@ class Universe:
         self.Pmm = temp_Pmm
         self.Pgg = temp_Pgg
         self.Pmg = temp_Pmg
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+
+    def addNoisePowerSpectrum(self, A=1, n=2):
         
+        self.Pmm = self.Pmm + A*self.k_range[:, None]**n
+        self.Pgg = self.Pgg + A*self.k_range[:, None]**n
+        self.Pmg = self.Pmg + A*self.k_range[:, None]**n
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+    
+    def multiplyNoisePowerSpectrum(self, A=1, n=2):
+        
+        self.Pmm = self.Pmm*(1 + A*self.k_range[:, None]**n)
+        self.Pgg = self.Pgg*(1 + A*self.k_range[:, None]**n)
+        self.Pmg = self.Pmg*(1 + A*self.k_range[:, None]**n)
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+
+    def divideNoisePowerSpectrum(self, A=1, n=2):
+        
+        self.Pmm = self.Pmm/(1 + A*self.k_range[:, None]**n)
+        self.Pgg = self.Pgg/(1 + A*self.k_range[:, None]**n)
+        self.Pmg = self.Pmg/(1 + A*self.k_range[:, None]**n)
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+    
+    def multiplyNoisePowerSpectrum2(self, A=1, n=2):
+        
+        self.Pmm = self.Pmm*(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+        self.Pgg = self.Pgg*(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+        self.Pmg = self.Pmg*(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+
+    def divideNoisePowerSpectrum2(self, A=1, n=2):
+        
+        self.Pmm = self.Pmm/(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+        self.Pgg = self.Pgg/(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+        self.Pmg = self.Pmg/(1 + (A*self.k_range[:, None])**n / (A**n + self.k_range[:, None]**n))
+
+        return self.z, (self.Pmm, self.Pgg, self.Pmg)
+
 
             
             

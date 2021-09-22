@@ -8,6 +8,8 @@ class TwoPointHarmonic:
         self.lmax = lmax
         self.ells = np.logspace(-2, np.log10(self.lmax), 3000)
         
+        
+        
     def genC_kk(self):
         
         self.C_kk = np.zeros(shape=(len(self.Kernel.q_kappa), len(self.Kernel.q_kappa), len(self.ells)))
@@ -27,7 +29,21 @@ class TwoPointHarmonic:
                 self.C_kk[i, j, :] = integrate.simps(C_kk_integrand[1::,:], x=self.Universe.chi[1::], axis=0)
                 
         return self.C_kk
-
+    
+    
+    
+    def genC_kk_test(self):
+        self.C_kk = np.zeros(shape=(len(self.Kernel.q_kappa), len(self.Kernel.q_kappa), len(self.ells)))
+        for i, q_kappa_i in enumerate(self.Kernel.q_kappa):
+            for j, q_kappa_j in enumerate(self.Kernel.q_kappa):
+                mean_chi = q_kappa_i * q_kappa_j * self.Universe.chi
+                k = (self.ells + 1/2)/mean_chi
+                
+                C_kk_integrand = q_kappa_i * q_kappa_j / self.Universe.chi (-1 + 1/2)/k**2
+                
+                
+                    
+                
     def genC_dk(self):
         
         self.C_dk = np.zeros(shape=(len(self.Kernel.q_delta), len(self.Kernel.q_kappa), len(self.ells)))
